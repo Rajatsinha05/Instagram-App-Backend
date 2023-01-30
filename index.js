@@ -11,7 +11,7 @@ app.use(express.json())
 const port = process.env.PORT || 8081;
 
 
-// app.use('/',routes)
+app.use('/',routes)
 
 app.post('/register' , async (req,res)=>{
 
