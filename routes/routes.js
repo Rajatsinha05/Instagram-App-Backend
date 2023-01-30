@@ -9,6 +9,22 @@ routes.get("/", (req, res) => {
   res.send("routes");
 });
 
+routes.post("/getposts", async (req, res) => {
+  try {
+    let { token } = req.body;
+
+    let { email } = await jwt.verify(token, "secretkey");
+
+    let temp = await User.find({ email: { $eq: email } });
+    console.log(temp);
+
+    let posts = temp[0].posts;
+
+    res.send(posts);
+  } catch (error) {
+    res.status(500).send("error");
+  }
+});
 //register
 routes.post("/users/register", async (req, res) => {
   try {
@@ -55,7 +71,7 @@ routes.post("/posts", async (req, res) => {
 
     let posts = temp[0].posts;
 
-    posts.push({title, body, device});
+    posts.push({ title, body, device });
 
     let check = await User.updateOne(
       { email: { $eq: email } },
@@ -105,30 +121,19 @@ routes.post("/posts", async (req, res) => {
 //   }
 // });
 
-
-
-
-
 // delete
 
+routes.delete("/posts/delete:id", async (req, res) => {
+  let { id } = req.params;
+  console.log(id);
 
-
-routes.delete('/posts/delete:id',async(req, res)=>{
-
-let{id} = req.params
-console.log(id)
-
-try {
+  try {
     let temp = await User.findByIdAndDelete(id);
-    
-res.status(200).send(id)
 
-} catch (error) {
-   res.status(500).send("err");
-}
-
-
-})
-
+    res.status(200).send(id);
+  } catch (error) {
+    res.status(500).send("err");
+  }
+});
 
 module.exports = routes;
