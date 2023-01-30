@@ -50,4 +50,41 @@ routes.post("/users/login", async (req, res) => {
   }
 });
 
+
+
+routes.post("/posts",async(req, res) => {
+
+    try {
+
+        let {tittle,body,deivce , token} = req.body;
+    
+        let {email} = await jwt.verify(token , 'secretkey');
+    
+        let temp = await User.find({email:{$eq:email}});
+        
+        let posts = temp[0].posts
+    
+        posts.push(tittle,body,deivce);
+    
+        let check = await User.updateOne({email:{$eq:email}} , {
+            $set:{
+                posts:posts
+            }
+        });
+    
+        console.log(posts);
+        
+    
+    
+        res.send('working');
+    } catch (error) {
+        res.status(500).send('err');
+    }
+
+
+})
+
+
+
+
 module.exports = routes;
