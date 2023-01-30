@@ -15,9 +15,15 @@ routes.get('/',(req,res) => {
 routes.post('/users/register',async(req,res) => {
 
 
+try {
+    
+    let data = await User.create(req.body)
+    res.status(200).send(data)
+} catch (error) {
+   console.log(error) 
+}
 
-   let data = await User.create(req.body)
-   res.status(200).send(data)
+
 })
 
 
