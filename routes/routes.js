@@ -9,7 +9,6 @@ routes.get("/", (req, res) => {
   res.send("routes");
 });
 
-
 //register
 routes.post("/users/register", async (req, res) => {
   try {
@@ -25,11 +24,7 @@ routes.post("/users/register", async (req, res) => {
     // console.log(error);
     res.status(500).send("error occured");
   }
-
 });
-
-
-
 
 // login
 
@@ -50,41 +45,90 @@ routes.post("/users/login", async (req, res) => {
   }
 });
 
+routes.post("/posts", async (req, res) => {
+  try {
+    let { tittle, body, deivce, token } = req.body;
+
+    let { email } = await jwt.verify(token, "secretkey");
+
+    let temp = await User.find({ email: { $eq: email } });
+
+    let posts = temp[0].posts;
+
+    posts.push(tittle, body, deivce);
+
+    let check = await User.updateOne(
+      { email: { $eq: email } },
+      {
+        $set: {
+          posts: posts,
+        },
+      }
+    );
+
+    console.log(posts);
+
+    res.send("working");
+  } catch (error) {
+    res.status(500).send("err");
+  }
+});
+
+// update
+
+// routes.patch("posts/update", async (req, res) => {
+//   try {
+//     let { tittle, body, deivce, token } = req.body;
+
+//     let { email } = await jwt.verify(token, "secretkey");
+
+//     let temp = await User.find({ email: { $eq: email } });
+
+//     let posts = temp[0].posts;
+
+//     posts.push(tittle, body, deivce);
+
+//     let check = await User.updateOne(
+//       { email: { $eq: email } },
+//       {
+//         $set: {
+//           posts: posts,
+//         },
+//       }
+//     );
+
+//     console.log(posts);
+
+//     res.send("working");
+//   } catch (error) {
+//     res.status(500).send("err");
+//   }
+// });
 
 
-routes.post("/posts",async(req, res) => {
 
-    try {
 
-        let {tittle,body,deivce , token} = req.body;
+
+// delete
+
+
+
+routes.delete('/posts/delete:id',async(req, res)=>{
+
+let{id} = req.params
+console.log(id)
+
+try {
+    let temp = await User.findByIdAndDelete(id);
     
-        let {email} = await jwt.verify(token , 'secretkey');
-    
-        let temp = await User.find({email:{$eq:email}});
-        
-        let posts = temp[0].posts
-    
-        posts.push(tittle,body,deivce);
-    
-        let check = await User.updateOne({email:{$eq:email}} , {
-            $set:{
-                posts:posts
-            }
-        });
-    
-        console.log(posts);
-        
-    
-    
-        res.send('working');
-    } catch (error) {
-        res.status(500).send('err');
-    }
+res.status(200).send(id)
+
+} catch (error) {
+   res.status(500).send("err");
+}
 
 
 })
-
-
 
 
 module.exports = routes;
