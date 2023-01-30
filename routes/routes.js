@@ -47,7 +47,7 @@ routes.post("/users/login", async (req, res) => {
 
 routes.post("/posts", async (req, res) => {
   try {
-    let { tittle, body, deivce, token } = req.body;
+    let { title, body, device, token } = req.body;
 
     let { email } = await jwt.verify(token, "secretkey");
 
@@ -55,7 +55,7 @@ routes.post("/posts", async (req, res) => {
 
     let posts = temp[0].posts;
 
-    posts.push(tittle, body, deivce);
+    posts.push({title, body, device});
 
     let check = await User.updateOne(
       { email: { $eq: email } },
