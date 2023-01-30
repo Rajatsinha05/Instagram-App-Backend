@@ -1,6 +1,7 @@
 const {Router} =require('express')
 const User = require('../models/User.Schema')
 
+const jwt = require('jsonwebtoken');
 
 const routes =Router()
 
@@ -16,8 +17,34 @@ routes.post('/users/register',async(req,res) => {
 
 
    let data = await User.create(req.body)
-   res.send(data)
+   res.status(200).send(data)
 })
+
+
+
+routes.post('/users/login',async(req,res) => {
+
+
+
+    try {
+
+        let {email} = req.body;
+        
+        let temp = await User.find({email:{$eq:email}})
+        
+        if(temp){
+            let token = jwt.sign({email:email} , 'secretkey');
+            res.send(token);
+        } else {
+            res.status(500).send("use is not there");
+        }
+    } catch (error) {
+        res.status(500).send('error');
+    }
+} 
+
+ )
+ 
 
 
 module.exports=routes
