@@ -13,14 +13,6 @@ const port = process.env.PORT || 8081;
 
 app.use('/',routes)
 
-app.post('/register' , async (req,res)=>{
-
-
-    res.send("done");
-})
-app.get('/' , (req,res)=>{
-    res.send("test");
-})
 
 app.listen(port,()=>{
 

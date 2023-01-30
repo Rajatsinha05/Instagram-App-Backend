@@ -12,20 +12,20 @@ routes.get("/", (req, res) => {
 
 //register
 routes.post("/users/register", async (req, res) => {
-//   try {
-//     let email = req.body.email;
+  try {
+    let email = req.body.email;
 
-//     if (await User.findOne({ email: { $eq: email } })) {
-//       return res.send("user alardy exists ");
-//     } else {
-//       let data = await User.create(req.body);
-//       res.status(200).send(data);
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
+    if (await User.findOne({ email: { $eq: email } })) {
+      return res.send("user alardy exists ");
+    } else {
+      let data = await User.create(req.body);
+      res.status(200).send(data);
+    }
+  } catch (error) {
+    // console.log(error);
+    res.status(500).send("error occured");
+  }
 
-    res.send('done');
 });
 
 
